@@ -13,28 +13,71 @@ body { background-color: #0a0a0a; color: #e5e5e5; font-family: ui-sans-serif, sy
 <body class="flex flex-col items-center justify-center min-h-screen p-6">
 <div class="max-w-2xl w-full space-y-8">
 <header class="text-left border-l-4 border-white pl-4">
-<h1 class="text-3xl font-bold tracking-tighter text-white uppercase">Ghost <span class="text-gray-500 text-sm font-normal">v1.0</span></h1>
-<p class="text-gray-400 uppercase text-xs tracking-widest">Unidad de Inteligencia Táctica</p>
+<h1 class="text-3xl font-bold tracking-tighter text-white uppercase">Ghost <span class="text-gray-500 text-sm font-normal">v1.2</span></h1>
+<p class="text-gray-400 uppercase text-[10px] tracking-[0.3em] text-zinc-500">Unidad de Inteligencia Táctica</p>
 </header>
 
 <main class="space-y-6">
 <div class="executive-border p-6 bg-zinc-900 rounded-sm">
-<label class="block text-xs font-semibold uppercase mb-2 text-gray-500 tracking-wider">Origen de Datos (YouTube/VEO URL)</label>
-<input type="text" id="videoUrl" placeholder="https://..." class="w-full bg-black border border-zinc-800 p-3 text-white focus:outline-none focus:border-white transition-colors text-sm">
-<button id="btnEjecutar" class="mt-4 w-full bg-white text-black font-bold py-3 uppercase tracking-tighter hover:bg-gray-200 transition-all text-xs">
-Ejecutar Análisis Táctico
+<label class="block text-[10px] font-bold uppercase mb-2 text-zinc-500 tracking-widest">Input Operativo (URL del Encuentro)</label>
+<input type="text" id="userInput" placeholder="https://..." class="w-full bg-black border border-zinc-800 p-3 text-white focus:outline-none focus:border-white transition-colors text-sm font-mono">
+<button onclick="ejecutarAnalisis()" id="btnGhost" class="mt-4 w-full bg-white text-black font-black py-4 uppercase tracking-tighter hover:bg-zinc-200 transition-all text-[11px]">
+Ejecutar Protocolo de Análisis
 </button>
 </div>
 
-<div id="resultado" class="hidden executive-border p-6 bg-zinc-900 rounded-sm space-y-4">
-<div class="flex justify-between items-center border-b border-zinc-800 pb-2">
-<h3 class="text-white font-bold uppercase text-xs tracking-widest">Informe de Operaciones</h3>
-<span class="text-[10px] text-zinc-500 font-mono">STATUS: COMPLETED</span>
+<div id="pantallaCarga" class="hidden text-center p-4">
+<span class="text-[10px] font-mono animate-pulse tracking-widest text-zinc-500">ACCEDIENDO A RED NEURONAL... EXTRRAYENDO DATA...</span>
 </div>
-<div id="textoInforme" class="text-sm leading-relaxed text-gray-300 whitespace-pre-line font-light">
+
+<div id="resultado" class="hidden executive-border p-8 bg-zinc-900 rounded-sm space-y-6 shadow-2xl">
+<div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+<h3 class="text-white font-bold uppercase text-[10px] tracking-[0.2em]">Informe de Inteligencia</h3>
+<span class="text-[9px] bg-white text-black px-2 py-0.5 font-black">CERTIFICADO</span>
+</div>
+<div id="textoInforme" class="text-sm leading-relaxed text-zinc-300 font-light">
+</div>
+<div class="pt-4 border-t border-zinc-800 flex justify-between">
+<span class="text-[9px] text-zinc-600 font-mono uppercase">ID-GHOST-2026-HQ</span>
+<button onclick="window.print()" class="text-[9px] text-white underline font-bold uppercase hover:text-zinc-400">Generar Activo PDF</button>
 </div>
 </div>
 </main>
 </div>
+
+<script>
+async function ejecutarAnalisis() {
+const input = document.getElementById('userInput').value;
+const btn = document.getElementById('btnGhost');
+const resDiv = document.getElementById('resultado');
+const carga = document.getElementById('pantallaCarga');
+const texto = document.getElementById('textoInforme');
+
+if(!input) return;
+
+btn.disabled = true;
+btn.innerText = "PROCESANDO...";
+carga.classList.remove('hidden');
+resDiv.classList.add('hidden');
+
+try {
+// Conexión dinámica: El sistema ahora está listo para recibir la lógica de Groq
+// que activaremos en el siguiente paso con la función de Netlify.
+setTimeout(() => {
+carga.classList.add('hidden');
+resDiv.classList.remove('hidden');
+texto.innerHTML = "<b>[ANÁLISIS DE ESTRUCTURA]</b><br>Sincronización de activos completada para el proyecto Ghost.<br><br><b>[ESTADO]</b><br>Infraestructura v1.2 operativa. Sistema preparado para el despliegue del motor de inteligencia dinámico.";
+btn.disabled = false;
+btn.innerText = "EJECUTAR PROTOCOLO DE ANÁLISIS";
+}, 1500);
+} catch (e) {
+alert("Error de enlace táctico.");
+btn.disabled = false;
+}
+}
+</script>
 </body>
 </html>
+
+
+
