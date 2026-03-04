@@ -45,7 +45,6 @@ Ejecutar Protocolo de Análisis
 </main>
 </div>
 
-<script>
 async function ejecutarAnalisis() {
 const input = document.getElementById('userInput').value;
 const btn = document.getElementById('btnGhost');
@@ -53,29 +52,39 @@ const resDiv = document.getElementById('resultado');
 const carga = document.getElementById('pantallaCarga');
 const texto = document.getElementById('textoInforme');
 
-if(!input) return;
+if(!input) return alert("Inserte URL operativa");
 
 btn.disabled = true;
-btn.innerText = "PROCESANDO...";
+btn.innerText = "EXTRAYENDO INTELIGENCIA...";
 carga.classList.remove('hidden');
 resDiv.classList.add('hidden');
 
 try {
-// Conexión dinámica: El sistema ahora está listo para recibir la lógica de Groq
-// que activaremos en el siguiente paso con la función de Netlify.
-setTimeout(() => {
+const respuesta = await fetch('/.netlify/functions/analizar', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ url: input })
+});
+
+const data = await respuesta.json();
+
+if (data.informe) {
 carga.classList.add('hidden');
 resDiv.classList.remove('hidden');
-texto.innerHTML = "<b>[ANÁLISIS DE ESTRUCTURA]</b><br>Sincronización de activos completada para el proyecto Ghost.<br><br><b>[ESTADO]</b><br>Infraestructura v1.2 operativa. Sistema preparado para el despliegue del motor de inteligencia dinámico.";
+texto.innerHTML = data.informe.replace(/\n/g, '<br>');
+} else {
+throw new Error("Fallo en respuesta");
+}
+
+} catch (e) {
+alert("ERROR TÁCTICO: Revisa la API Key en Netlify.");
+console.error(e);
+} finally {
 btn.disabled = false;
 btn.innerText = "EJECUTAR PROTOCOLO DE ANÁLISIS";
-}, 1500);
-} catch (e) {
-alert("Error de enlace táctico.");
-btn.disabled = false;
+carga.classList.add('hidden');
 }
 }
-</script>
 </body>
 </html>
 
