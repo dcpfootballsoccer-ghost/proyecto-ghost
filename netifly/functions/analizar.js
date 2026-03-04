@@ -1,27 +1,22 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const axios = require('axios');
 
 exports.handler = async (event) => {
-if (event.httpMethod !== "POST") {
-return { statusCode: 405, body: "Método no permitido" };
-}
-
+if (event.httpMethod !== "POST") return { statusCode: 405, body: "No permitido" };
 const { url } = JSON.parse(event.body);
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const key = process.env.GEMINI_API_KEY;
 
 try {
-const prompt = `Eres la IA del Proyecto Ghost. Tu estilo de escritura es clínico, ejecutivo y orientado a soluciones. Analiza estratégicamente este encuentro: ${url}`;
-const result = await model.generateContent(prompt);
-const response = await result.response;
+const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+const response = await axios.post(endpoint, {
+contents: [{ parts: [{ text: `Eres la IA del Proyecto Ghost. Analiza estratégicamente este encuentro: ${url}` }] }]
+});
 
 return {
 statusCode: 200,
-body: JSON.stringify({ informe: response.text() })
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ informe: response.data.candidates[0].content.parts[0].text })
 };
 } catch (error) {
-return {
-statusCode: 500,
-body: JSON.stringify({ error: "Fallo en el enlace táctico con Gemini." })
-};
+return { statusCode: 500, body: JSON.stringify({ error: "Fallo de conexión táctica." }) };
 }
 };
