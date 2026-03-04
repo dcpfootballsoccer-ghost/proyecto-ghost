@@ -75,6 +75,37 @@ texto.innerHTML = data.informe.replace(/\n/g, '<br>');
 } else {
 throw new Error("Fallo en respuesta");
 }
+<script>
+async function ejecutarAnalisis() {
+const input = document.getElementById('userInput').value;
+const btn = document.getElementById('btnGhost');
+const resDiv = document.getElementById('resultado');
+const carga = document.getElementById('pantallaCarga');
+const texto = document.getElementById('textoInforme');
+
+if(!input) return alert("Inserte URL operativa");
+
+btn.disabled = true;
+btn.innerText = "EXTRAYENDO INTELIGENCIA...";
+carga.classList.remove('hidden');
+resDiv.classList.add('hidden');
+
+try {
+const respuesta = await fetch('/.netlify/functions/analizar', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ url: input })
+});
+
+const data = await respuesta.json();
+
+if (data.informe) {
+carga.classList.add('hidden');
+resDiv.classList.remove('hidden');
+texto.innerHTML = data.informe.replace(/\n/g, '<br>');
+} else {
+throw new Error("Fallo en respuesta");
+}
 
 } catch (e) {
 alert("ERROR TÁCTICO: Revisa la API Key en Netlify.");
@@ -85,7 +116,7 @@ btn.innerText = "EJECUTAR PROTOCOLO DE ANÁLISIS";
 carga.classList.add('hidden');
 }
 }
-</body>
+</script> </body>
 </html>
 
 
